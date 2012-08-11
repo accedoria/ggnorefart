@@ -239,6 +239,7 @@ class LuaCompletions(sublime_plugin.EventListener):
 				"Workspace",
 				"Lighting",
 				"Players",
+				"Debris",
 
 				#types
 				"BasePart",
@@ -309,6 +310,7 @@ class LuaCompletions(sublime_plugin.EventListener):
 				("FindPartOnRayWithIgnoreList", "FindPartOnRayWithIgnoreList($1)"),
 				("TakeDamage", "TakeDamage($1)"),
 				("Destroy", "Destroy()"),
+				("AddItem", "AddItem($1)"),
 			]
 
 			self.prop_completions = [
