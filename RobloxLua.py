@@ -1,7 +1,7 @@
 import sublime
 import sublime_plugin
 import copy
-
+import re
 
 class TokenStream:
 	def __init__(self, src):
@@ -446,12 +446,13 @@ class LuaCompletions(sublime_plugin.EventListener):
 			if match:
 				info.rbxutility_included = True
 			else:
-				needs_rbxutility = re.search(r"""Create('|")\w+('|")""", whole_text)
+				needs_rbxutility = re.search(r"""Create('|")\w+('|")|CreateSignal\(""", whole_text)
 				if needs_rbxutility:
 					info.rbxutility_included = True
 					edit = view.begin_edit("automatic_loadlibrary_inculde", "rbxutility")
 					view.insert(edit, 0, """local RbxUtility = LoadLibrary('RbxUtility')\n"""
-					                     """local Create = RbxUtility.Create\n\n""")
+					                     """local Create = RbxUtility.Create\n"""
+					                     """local CreateSignal = RbxUtility.CreateSignal\n""")
 					view.end_edit(edit)
 				else:
 					info.rbxutility_included = False
@@ -472,16 +473,17 @@ class LuaCompletions(sublime_plugin.EventListener):
 				self.do_dot_complete = True
 				view.run_command('auto_complete')
 
-			elif len(toLeft) > 0 and toLeft[-1] == ':':
+			elif len(toLeft) > 0 and toLeft[-1] == ':': 
 				self.do_colon_complete = True
 				view.run_command('auto_complete')
 
-			elif info.rbxutility_included == False and re.search(r"""\bCreate\(?('|")""", toLeft):
+			elif info.rbxutility_included == False and re.search(r"""Create('|")\w+('|")|CreateSignal\(""", toLeft):
 				#require rbxutility
 				info.rbxutility_included = True
 				edit = view.begin_edit("automatic_loadlibrary_inculde", "rbxutility")
 				view.insert(edit, 0, """local RbxUtility = LoadLibrary('RbxUtility')\n"""
-				                     """local Create = RbxUtility.Create\n\n""")
+				                     """local Create = RbxUtility.Create\n"""
+				                     """local CreateSignal = RbxUtility.CreateSignal\n""")
 				view.end_edit(edit)				
 
 			else:
